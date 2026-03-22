@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Editor.R3
+namespace R3.Unity.Editor
 {
     public static class EditorEnableState
     {

@@ -1,5 +1,5 @@
-﻿using System;
-using R3.Collections;
+﻿using R3.Collections;
+using System;
 using UnityEngine;
 
 namespace R3
@@ -43,10 +43,10 @@ namespace R3
         {
             long frameCount = Time.frameCount;
 
-            ReadOnlySpan<IFrameRunnerWorkItem> span = list.AsSpan();
+            var span = list.AsSpan();
             for (int i = 0; i < span.Length; i++)
             {
-                ref readonly IFrameRunnerWorkItem item = ref span[i];
+                ref readonly var item = ref span[i];
                 if (item != null)
                 {
                     try

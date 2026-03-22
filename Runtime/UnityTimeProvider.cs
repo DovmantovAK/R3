@@ -183,8 +183,8 @@ namespace R3
             }
 
             // DelayType.Realtime
-            long current = TimeProvider.System.GetTimestamp();
-            TimeSpan elapsed = TimeProvider.System.GetElapsedTime(lastTimestamp, current);
+            var current = TimeProvider.System.GetTimestamp();
+            var elapsed = TimeProvider.System.GetElapsedTime(lastTimestamp, current);
             lastTimestamp = current;
             return (float)elapsed.TotalSeconds;
         }
@@ -221,7 +221,7 @@ namespace R3
             {
                 if (runState == RunningState.RunningDueTime)
                 {
-                    float dt = (float)d.TotalSeconds;
+                    var dt = (float)d.TotalSeconds;
                     if (elapsed >= dt)
                     {
                         callback(state);
@@ -243,7 +243,7 @@ namespace R3
                 }
                 else
                 {
-                    float dt = (float)p.TotalSeconds;
+                    var dt = (float)p.TotalSeconds;
                     if (elapsed >= dt)
                     {
                         callback(state);

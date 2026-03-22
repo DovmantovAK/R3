@@ -3,7 +3,7 @@
 using System;
 using TMPro;
 
-namespace R3.External.TextMeshPro
+namespace R3
 {
     public static class TextMeshProExtensions
     {

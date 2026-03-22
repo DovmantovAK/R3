@@ -2,10 +2,13 @@
 
 using System;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.LowLevel;
 using PlayerLoopType = UnityEngine.PlayerLoop;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace R3
 {
@@ -55,14 +58,14 @@ namespace R3
 #if UNITY_EDITOR
             // When domain reload is disabled, re-initialization is required when entering play mode; 
             // otherwise, pending tasks will leak between play mode sessions.
-            bool domainReloadDisabled = UnityEditor.EditorSettings.enterPlayModeOptionsEnabled &&
-                                        UnityEditor.EditorSettings.enterPlayModeOptions.HasFlag(UnityEditor.EnterPlayModeOptions.DisableDomainReload);
+            var domainReloadDisabled = UnityEditor.EditorSettings.enterPlayModeOptionsEnabled &&
+                UnityEditor.EditorSettings.enterPlayModeOptions.HasFlag(UnityEditor.EnterPlayModeOptions.DisableDomainReload);
             if (!domainReloadDisabled && runners != null) return;
 #else
             if (runners != null) return; // already initialized
 #endif
 
-            PlayerLoopSystem playerLoop = PlayerLoop.GetCurrentPlayerLoop();
+            var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
             Initialize(ref playerLoop);
         }
 
@@ -70,7 +73,7 @@ namespace R3
         {
             runners = new UnityFrameProvider[9];
 
-            PlayerLoopSystem[] newLoop = playerLoop.subSystemList.ToArray();
+            var newLoop = playerLoop.subSystemList.ToArray();
 
             // Initialization
             InsertLoop(newLoop, typeof(PlayerLoopType.Initialization), typeof(R3LoopRunners.R3Initialization), runners[0] = (UnityFrameProvider)UnityFrameProvider.Initialization);
@@ -90,8 +93,8 @@ namespace R3
 
         static void InsertLoop(PlayerLoopSystem[] loopSystems, Type loopType, Type loopRunnerType, UnityFrameProvider frameProvider)
         {
-            int i = FindLoopSystemIndex(loopSystems, loopType);
-            ref PlayerLoopSystem loop = ref loopSystems[i];
+            var i = FindLoopSystemIndex(loopSystems, loopType);
+            ref var loop = ref loopSystems[i];
             loop.subSystemList = InsertRunner(loop.subSystemList, loopRunnerType, frameProvider);
         }
 
@@ -126,13 +129,13 @@ namespace R3
             };
 #endif
 
-            PlayerLoopSystem[] source = subSystemList.Where(x => x.type != loopRunnerType).ToArray(); // remove duplicate(initialized previously)
-            PlayerLoopSystem[] dest   = new PlayerLoopSystem[source.Length + 1];
+            var source = subSystemList.Where(x => x.type != loopRunnerType).ToArray(); // remove duplicate(initialized previously)
+            var dest = new PlayerLoopSystem[source.Length + 1];
 
             // insert first
-            int insertIndex = (runner.PlayerLoopTiming != PlayerLoopTiming.PostFixedUpdate)
-                                  ? 0 // insert first
-                                  : dest.Length - 1; // insert last
+            var insertIndex = (runner.PlayerLoopTiming != PlayerLoopTiming.PostFixedUpdate)
+                ? 0 // insert first
+                : dest.Length - 1; // insert last
 
             Array.Copy(source, 0, dest, insertIndex == 0 ? 1 : 0, source.Length);
 
@@ -167,7 +170,7 @@ namespace R3
 
             if (runners != null)
             {
-                foreach (UnityFrameProvider item in runners)
+                foreach (var item in runners)
                 {
                     if (item != null) item.Run();
                 }

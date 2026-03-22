@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
+
+#if R3_UGUI_SUPPORT
 using UnityEngine.EventSystems;
+#endif
 
 namespace R3.Triggers
 {

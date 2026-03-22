@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using R3;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace Editor.R3
+namespace R3.Unity.Editor
 {
     public class ObservableTrackerViewItem : TreeViewItem
     {
@@ -34,7 +33,7 @@ namespace Editor.R3
 
         static string GetFirstLine(string str)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < str.Length; i++)
             {
                 if (str[i] == '\r' || str[i] == '\n')
@@ -85,7 +84,7 @@ namespace Editor.R3
 
         public void ReloadAndSort()
         {
-            List<int> currentSelected = this.state.selectedIDs;
+            var currentSelected = this.state.selectedIDs;
             Reload();
             Header_sortingChanged(this.multiColumnHeader);
             this.state.selectedIDs = currentSelected;
@@ -94,10 +93,10 @@ namespace Editor.R3
         private void Header_sortingChanged(MultiColumnHeader multiColumnHeader)
         {
             SessionState.SetInt(sortedColumnIndexStateKey, multiColumnHeader.sortedColumnIndex);
-            int index = multiColumnHeader.sortedColumnIndex;
-            bool ascending = multiColumnHeader.IsSortedAscending(multiColumnHeader.sortedColumnIndex);
+            var index = multiColumnHeader.sortedColumnIndex;
+            var ascending = multiColumnHeader.IsSortedAscending(multiColumnHeader.sortedColumnIndex);
 
-            IEnumerable<ObservableTrackerViewItem> items = rootItem.children.Cast<ObservableTrackerViewItem>();
+            var items = rootItem.children.Cast<ObservableTrackerViewItem>();
 
             IOrderedEnumerable<ObservableTrackerViewItem> orderedEnumerable;
             switch (index)
@@ -121,11 +120,11 @@ namespace Editor.R3
 
         protected override TreeViewItem BuildRoot()
         {
-            TreeViewItem root = new TreeViewItem { depth = -1 };
+            var root = new TreeViewItem { depth = -1 };
 
-            List<TreeViewItem> children = new List<TreeViewItem>();
+            var children = new List<TreeViewItem>();
 
-            DateTime now = DateTime.Now; // tracking state is using local Now.
+            var now = DateTime.Now; // tracking state is using local Now.
             ObservableTracker.ForEachActiveTask(state =>
             {
                 children.Add(new ObservableTrackerViewItem(state.TrackingId) { Type = state.FormattedType, Elapsed = (now - state.AddTime).TotalSeconds.ToString("00.00"), Location = state.StackTrace });
@@ -143,14 +142,14 @@ namespace Editor.R3
 
         protected override void RowGUI(RowGUIArgs args)
         {
-            ObservableTrackerViewItem item = args.item as ObservableTrackerViewItem;
+            var item = args.item as ObservableTrackerViewItem;
 
-            for (int visibleColumnIndex = 0; visibleColumnIndex < args.GetNumVisibleColumns(); visibleColumnIndex++)
+            for (var visibleColumnIndex = 0; visibleColumnIndex < args.GetNumVisibleColumns(); visibleColumnIndex++)
             {
-                Rect rect = args.GetCellRect(visibleColumnIndex);
-                int columnIndex = args.GetColumn(visibleColumnIndex);
+                var rect = args.GetCellRect(visibleColumnIndex);
+                var columnIndex = args.GetColumn(visibleColumnIndex);
 
-                GUIStyle labelStyle = args.selected ? EditorStyles.whiteLabel : EditorStyles.label;
+                var labelStyle = args.selected ? EditorStyles.whiteLabel : EditorStyles.label;
                 labelStyle.alignment = TextAnchor.MiddleLeft;
                 switch (columnIndex)
                 {

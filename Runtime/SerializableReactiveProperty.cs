@@ -1,9 +1,11 @@
 ﻿using System;
+using UnityEngine;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
-using Object = UnityEngine.Object;
+#endif
 
 namespace R3
 {
@@ -47,7 +49,7 @@ namespace R3
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            SerializedProperty p = property.FindPropertyRelative("value");
+            var p = property.FindPropertyRelative("value");
 
             EditorGUI.BeginChangeCheck();
 
@@ -63,14 +65,14 @@ namespace R3
 
             if (EditorGUI.EndChangeCheck())
             {
-                string[] paths = property.propertyPath.Split('.'); // X.Y.Z...
-                Object attachedComponent = property.serializedObject.targetObject;
+                var paths = property.propertyPath.Split('.'); // X.Y.Z...
+                var attachedComponent = property.serializedObject.targetObject;
 
-                object targetProp = GetValueRecursive(attachedComponent, 0, paths);
+                var targetProp = GetValueRecursive(attachedComponent, 0, paths);
                 if (targetProp == null) return;
 
                 property.serializedObject.ApplyModifiedProperties(); // deserialize to field
-                MethodInfo methodInfo = targetProp.GetType().GetMethod("ForceNotify", BindingFlags.IgnoreCase | BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                var methodInfo = targetProp.GetType().GetMethod("ForceNotify", BindingFlags.IgnoreCase | BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (methodInfo != null)
                 {
                     methodInfo.Invoke(targetProp, Array.Empty<object>());
@@ -80,7 +82,7 @@ namespace R3
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            SerializedProperty p = property.FindPropertyRelative("value");
+            var p = property.FindPropertyRelative("value");
             if (p.propertyType == SerializedPropertyType.Quaternion)
             {
                 // Quaternion is Vector3(EulerAngles)
@@ -94,10 +96,10 @@ namespace R3
 
         object GetValueRecursive(object obj, int index, string[] paths)
         {
-            string path = paths[index];
+            var path = paths[index];
 
             FieldInfo fldInfo = null;
-            Type type = obj.GetType();
+            var type = obj.GetType();
             while (fldInfo == null)
             {
                 // attempt to get information about the field
@@ -117,9 +119,9 @@ namespace R3
                 try
                 {
                     path = paths[++index];
-                    Match m = Regex.Match(path, @"(.+)\[([0-9]+)*\]");
-                    int arrayIndex = int.Parse(m.Groups[2].Value);
-                    object arrayValue = (obj as System.Collections.IList)[arrayIndex];
+                    var m = Regex.Match(path, @"(.+)\[([0-9]+)*\]");
+                    var arrayIndex = int.Parse(m.Groups[2].Value);
+                    var arrayValue = (obj as System.Collections.IList)[arrayIndex];
                     if (index < paths.Length - 1)
                     {
                         return GetValueRecursive(arrayValue, ++index, paths);
@@ -140,7 +142,7 @@ namespace R3
                 throw new Exception("Can't decode path:" + string.Join(", ", paths));
             }
 
-            object v = fldInfo.GetValue(obj);
+            var v = fldInfo.GetValue(obj);
             if (index < paths.Length - 1)
             {
                 return GetValueRecursive(v, ++index, paths);

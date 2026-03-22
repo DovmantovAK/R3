@@ -344,7 +344,7 @@ namespace R3.Triggers
         static T GetOrAddComponent<T>(GameObject gameObject)
             where T : Component
         {
-            T component = gameObject.GetComponent<T>();
+            var component = gameObject.GetComponent<T>();
             if (component == null)
             {
                 component = gameObject.AddComponent<T>();

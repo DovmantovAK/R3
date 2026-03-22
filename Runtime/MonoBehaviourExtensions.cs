@@ -1,6 +1,6 @@
-﻿using System;
+﻿using R3.Triggers;
+using System;
 using System.Threading;
-using R3.Triggers;
 using UnityEngine;
 
 namespace R3
@@ -32,7 +32,7 @@ namespace R3
                 return disposable;
             }
 
-            ObservableDestroyTrigger trigger = gameObject.GetComponent<ObservableDestroyTrigger>();
+            var trigger = gameObject.GetComponent<ObservableDestroyTrigger>();
             if (trigger == null)
             {
                 trigger = gameObject.AddComponent<ObservableDestroyTrigger>();

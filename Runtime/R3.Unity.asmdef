@@ -1,6 +1,6 @@
 {
     "name": "R3.Unity",
-    "rootNamespace": "",
+    "rootNamespace": "R3",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

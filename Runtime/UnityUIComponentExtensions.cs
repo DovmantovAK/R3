@@ -1,4 +1,5 @@
 #if R3_UGUI_SUPPORT
+using R3;
 using System;
 using UnityEngine;
 using UnityEngine.UI;

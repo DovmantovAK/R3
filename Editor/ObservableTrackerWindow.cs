@@ -1,13 +1,14 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-using System;
+using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-using R3;
-using UnityEditor;
-using UnityEngine;
+using System.Reflection;
+using System;
+using UnityEditor.IMGUI.Controls;
 
-namespace Editor.R3
+namespace R3.Unity.Editor
 {
     public class ObservableTrackerWindow : EditorWindow
     {
@@ -136,11 +137,11 @@ namespace Editor.R3
                 GUILayout.ExpandWidth(true),
                 GUILayout.MaxWidth(2000f)
             });
-            Rect controlRect = EditorGUILayout.GetControlRect(new GUILayoutOption[]
-                                                              {
-                                                                  GUILayout.ExpandHeight(true),
-                                                                  GUILayout.ExpandWidth(true)
-                                                              });
+            var controlRect = EditorGUILayout.GetControlRect(new GUILayoutOption[]
+            {
+                GUILayout.ExpandHeight(true),
+                GUILayout.ExpandWidth(true)
+            });
 
 
             treeView?.OnGUI(controlRect);
@@ -196,12 +197,12 @@ namespace Editor.R3
                 detailsStyle.margin.right = 15;
             }
 
-            string    message  = "";
-            List<int> selected = treeView.state.selectedIDs;
+            string message = "";
+            var selected = treeView.state.selectedIDs;
             if (selected.Count > 0)
             {
-                int first = selected[0];
-                ObservableTrackerViewItem item = treeView.CurrentBindingItems.FirstOrDefault(x => x.id == first) as ObservableTrackerViewItem;
+                var first = selected[0];
+                var item = treeView.CurrentBindingItems.FirstOrDefault(x => x.id == first) as ObservableTrackerViewItem;
                 if (item != null)
                 {
                     message = item.Location;
@@ -209,7 +210,7 @@ namespace Editor.R3
             }
 
             detailsScroll = EditorGUILayout.BeginScrollView(this.detailsScroll, EmptyLayoutOption);
-            Vector2 vector = detailsStyle.CalcSize(new GUIContent(message));
+            var vector = detailsStyle.CalcSize(new GUIContent(message));
             EditorGUILayout.SelectableLabel(message, detailsStyle, new GUILayoutOption[]
             {
                 GUILayout.ExpandHeight(true),
